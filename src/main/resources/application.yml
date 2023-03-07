@@ -1,0 +1,13 @@
+server:
+  port: 8080
+
+canal:
+  instance :
+    host: 192.168.254.132
+    port: 11111
+  mq:
+    topic: example
+  deal:
+    batchSize: 1000
+  file:
+    rootPath: /canal
