@@ -33,19 +33,27 @@ public class CanalClient {
     @Value("${canal.deal.batchSize:}")
     private Integer batchSize;
 
-    @Value("${canal.file.rootPath:}")
-    private String sqlRootPath;
+    @Value("${canal.file.ftpPath:}")
+    private String ftpPath;
 
 
-    private String sqlSendPath = "send";
+    private static String sqlSendPath;
 
 
-    private String sqlReplyPath = "reply";
+    private static String sqlReplyPath;
 
 
-    private static String sqlCompletePath = "complete";
+    private static String sqlCompletePath;
 
     private static String SQL_FILE_SUFFIX = ".sql";
+
+    @Value("${canal.file.rootPath:}")
+    public void setFilePath(String rootPath){
+        String root = FileUtil.dirpathFormat(rootPath,true);
+        sqlSendPath = FileUtil.dirPathSplice(root,"send");
+        sqlReplyPath = FileUtil.dirPathSplice(root,"reply");
+        sqlCompletePath = FileUtil.dirPathSplice(root,"complete");
+    }
 
 
     //sql队列
@@ -94,7 +102,7 @@ public class CanalClient {
     }
 
     /**
-     * @author: wujt
+     * @author: Pillow2023
      * @date: 2023/3/1
      * @Title: saveQueueSqlToFile
      * @Description : 将队列中的sql语句逐条导出为sql文件
@@ -105,14 +113,8 @@ public class CanalClient {
         for(int i = 0;i< SQL_QUEUE.size();i++){
             String sql = SQL_QUEUE.poll();
             log.info("[sql]---->"+sql);
-            //格式化目录
-            sqlRootPath = FileUtil.dirpathFormat(sqlRootPath,true);
-            sqlSendPath = FileUtil.dirPathSplice(sqlRootPath,sqlSendPath);
-            sqlReplyPath = FileUtil.dirPathSplice(sqlRootPath,sqlReplyPath);
-            sqlCompletePath = FileUtil.dirPathSplice(sqlRootPath,sqlCompletePath);
-
             String fileName = DateFormatUtil.getLocalDateTime("yyyy-MM-dd HH-mm-ss-SSS")+SQL_FILE_SUFFIX;
-            File file = new File(sqlSendPath+"/"+fileName);
+            File file = new File(FileUtil.getFilePath(sqlSendPath,fileName));
             FileOutputStream outputStream = null;
             try {
                 outputStream = new FileOutputStream(file);
@@ -124,12 +126,14 @@ public class CanalClient {
                     outputStream.close();
                 }
             }
+            //上传至目标服务器ftp目录
+            FtpUtil.upload(ftpPath,file);
         }
     }
 
 
     /**
-     * @author: wujt
+     * @author: Pillow2023
      * @date: 2023/3/1
      * @Title: dataHandle
      * @Description : 数据处理
@@ -159,7 +163,7 @@ public class CanalClient {
 
 
     /**
-     * @author: wujt
+     * @author: Pillow2023
      * @date: 2023/3/1
      * @Title: saveDDLSql
      * @Description : 保存DDL语句
@@ -178,7 +182,7 @@ public class CanalClient {
 
 
     /**
-     * @author: wujt
+     * @author: Pillow2023
      * @date: 2023/3/1
      * @Title: saveInsertSql
      * @Description : 保存insert语句，无法
@@ -216,7 +220,7 @@ public class CanalClient {
 
 
     /**
-     * @author: wujt
+     * @author: Pillow2023
      * @date: 2023/3/1
      * @Title: saveUpdateSql
      * @Description : 保存sql文件
@@ -252,7 +256,7 @@ public class CanalClient {
     }
 
     /**
-     * @author: wujt
+     * @author: Pillow2023
      * @date: 2023/3/1
      * @Title: saveDeleteSql
      * @Description : 保存删除sql

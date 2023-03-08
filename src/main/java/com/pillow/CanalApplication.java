@@ -7,7 +7,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
- * @author wujt
+ * @author Pillow2023
  * @ClassName CanalApplication
  * @Description 类的说明
  * @date 2023/3/1

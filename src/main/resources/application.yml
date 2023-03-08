@@ -11,6 +11,7 @@ canal:
     batchSize: 1000
   file:
     rootPath: canal
+    ftpPath: /opt/canal_sql_file/
 
 ftp:
   host: 192.168.254.132

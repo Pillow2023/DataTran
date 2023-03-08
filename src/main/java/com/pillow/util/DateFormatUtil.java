@@ -6,7 +6,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 /**
- * @author wujt
+ * @author Pillow2023
  * @ClassName DateFormatUtil
  * @Description 日格式化工具类
  * @date 2023/3/1
