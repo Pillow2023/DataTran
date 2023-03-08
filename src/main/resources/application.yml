@@ -10,4 +10,11 @@ canal:
   deal:
     batchSize: 1000
   file:
-    rootPath: /canal
+    rootPath: canal
+
+ftp:
+  host: 192.168.254.132
+  port: 21
+  username: tung
+  password: tung
+  encoding: GBK

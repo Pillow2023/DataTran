@@ -21,19 +21,19 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 @Slf4j
 public class CanalClient {
 
-    @Value("${canal.instance.host}")
+    @Value("${canal.instance.host:}")
     private String ip;
 
-    @Value("${canal.instance.port}")
-    private int port;
+    @Value("${canal.instance.port:}")
+    private Integer port;
 
-    @Value("${canal.mq.topic}")
+    @Value("${canal.mq.topic:}")
     private String destination;
 
-    @Value("${canal.deal.batchSize}")
-    private int batchSize;
+    @Value("${canal.deal.batchSize:}")
+    private Integer batchSize;
 
-    @Value("${canal.file.rootPath}")
+    @Value("${canal.file.rootPath:}")
     private String sqlRootPath;
 
 
@@ -106,10 +106,10 @@ public class CanalClient {
             String sql = SQL_QUEUE.poll();
             log.info("[sql]---->"+sql);
             //格式化目录
-            sqlRootPath = FileUtil.getFormatDir(sqlRootPath);
-            sqlSendPath = FileUtil.getFormatDir(sqlRootPath+"/"+sqlSendPath);
-            sqlReplyPath = FileUtil.getFormatDir(sqlRootPath+"/"+sqlReplyPath);
-            sqlCompletePath = FileUtil.getFormatDir(sqlRootPath+"/"+sqlCompletePath);
+            sqlRootPath = FileUtil.dirpathFormat(sqlRootPath,true);
+            sqlSendPath = FileUtil.dirPathSplice(sqlRootPath,sqlSendPath);
+            sqlReplyPath = FileUtil.dirPathSplice(sqlRootPath,sqlReplyPath);
+            sqlCompletePath = FileUtil.dirPathSplice(sqlRootPath,sqlCompletePath);
 
             String fileName = DateFormatUtil.getLocalDateTime("yyyy-MM-dd HH-mm-ss-SSS")+SQL_FILE_SUFFIX;
             File file = new File(sqlSendPath+"/"+fileName);
