@@ -1,10 +1,13 @@
-package com.pillow.util;
+package com.pillow.client;
 
 import com.alibaba.otter.canal.client.CanalConnector;
 import com.alibaba.otter.canal.client.CanalConnectors;
 import com.alibaba.otter.canal.protocol.CanalEntry.*;
 import com.alibaba.otter.canal.protocol.Message;
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.pillow.util.DateFormatUtil;
+import com.pillow.util.FileUtil;
+import com.pillow.util.FtpUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -30,10 +33,10 @@ public class CanalClient {
     @Value("${canal.mq.topic:}")
     private String destination;
 
-    @Value("${canal.deal.batchSize:}")
+    @Value("${canal.deal.batchsize:}")
     private Integer batchSize;
 
-    @Value("${canal.file.ftpPath:}")
+    @Value("${canal.file.ftppath:}")
     private String ftpPath;
 
 
@@ -47,12 +50,12 @@ public class CanalClient {
 
     private static String SQL_FILE_SUFFIX = ".sql";
 
-    @Value("${canal.file.rootPath:}")
-    public void setFilePath(String rootPath){
-        String root = FileUtil.dirpathFormat(rootPath,true);
-        sqlSendPath = FileUtil.dirPathSplice(root,"send");
-        sqlReplyPath = FileUtil.dirPathSplice(root,"reply");
-        sqlCompletePath = FileUtil.dirPathSplice(root,"complete");
+    @Value("${canal.file.path:}")
+    public void setFilePath(String path){
+        String rootPath = FileUtil.dirpathFormat(path,true);
+        sqlSendPath = FileUtil.dirPathSplice(rootPath,"send");
+        sqlReplyPath = FileUtil.dirPathSplice(rootPath,"reply");
+        sqlCompletePath = FileUtil.dirPathSplice(rootPath,"complete");
     }
 
 

@@ -1,6 +1,12 @@
 server:
   port: 8080
 
+datatran:
+  send:
+    enable: true
+  receive:
+    enable: true
+
 canal:
   instance :
     host: 192.168.254.132
@@ -8,10 +14,10 @@ canal:
   mq:
     topic: example
   deal:
-    batchSize: 1000
+    batchsize: 1000
   file:
-    rootPath: canal
-    ftpPath: /opt/canal_sql_file/
+    path: canal
+    ftppath: /opt/canal_sql_file/
 
 ftp:
   host: 192.168.254.132
