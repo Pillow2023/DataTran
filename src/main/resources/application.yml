@@ -17,7 +17,6 @@ canal:
     batchsize: 1000
   file:
     path: canal
-    ftppath: /opt/canal_sql_file/
 
 ftp:
   host: 192.168.254.132
@@ -25,3 +24,4 @@ ftp:
   username: tung
   password: tung
   encoding: GBK
+  filepath: /opt/canal_sql_file/

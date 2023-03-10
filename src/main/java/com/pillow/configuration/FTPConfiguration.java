@@ -62,7 +62,7 @@ public class FTPConfiguration {
             try {
                 pool.addObject();
             } catch (Exception e) {
-                log.error("预加载ftp连接对象失败...",e);
+                log.error("Failed to preload the ftp connection object:{}",e);
             }
         }
     }
@@ -79,7 +79,7 @@ public class FTPConfiguration {
     public void destroy(){
         if(pool!=null){
             pool.close();
-            log.info("销毁ftpClientPool...");
+            log.info("Destroy ftpClientPool...");
         }
     }
 
@@ -137,18 +137,18 @@ public class FTPConfiguration {
             try {
                 ftpClient.connect(props.getHost(), props.getPort());
                 ftpClient.login(props.getUsername(), props.getPassword());
-                log.debug("连接FTP服务器返回码{}", ftpClient.getReplyCode());
+                log.debug("Connect FTP server return code:{}", ftpClient.getReplyCode());
                 ftpClient.setBufferSize(props.getBufferSize());
-                //ftpClient.setControlEncoding(props.getEncoding());
+                ftpClient.setControlEncoding(props.getEncoding());
                 ftpClient.setFileType(FTPClient.BINARY_FILE_TYPE);
                 // ftpClient.enterLocalPassiveMode();
                 return new DefaultPooledObject<>(ftpClient);
             }catch (Exception e){
-                log.error("建立Ftp连接失败",e);
+                log.error("Failed to set up the  connection to Ftp:{}",e);
                 if(ftpClient.isAvailable()){
                     ftpClient.disconnect();
                 }
-                throw new Exception("建立FTP连接失败", e);
+                throw new Exception("Failed to set up the  connection to Ftp", e);
             }
         }
 
@@ -186,7 +186,7 @@ public class FTPConfiguration {
                 ftpClient.changeWorkingDirectory("/");
                 return true;
             }catch (Exception e) {
-                log.error("验证FTP连接失败::{}", e);
+                log.error("Failed to verify the FTP connection::{}", e);
                 return false;
             }
         }

@@ -94,6 +94,7 @@ public class FtpUtil {
             InputStream input = new FileInputStream(file);
             ftp.storeFile(new String(file.getName().getBytes(encoding),"ISO-8859-1"),input);
             input.close();
+            log.info("upload file【"+file.getName()+"】 is success!");
         } catch (FileNotFoundException fileNotFoundException){
             fileNotFoundException.printStackTrace();
         } catch (IOException ioException){
@@ -123,7 +124,7 @@ public class FtpUtil {
             //返回对象
             ftpClientPool.returnObject(ftpClient);
         }catch (Exception e){
-            log.error("无法返回ftp客户端回连接池",e);
+            log.error("Failed to return the ftp client to the connection pool:{}",e);
             if(ftpClient.isAvailable()){
                 try {
                     //断开连接

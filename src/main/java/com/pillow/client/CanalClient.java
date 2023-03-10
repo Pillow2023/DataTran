@@ -36,7 +36,7 @@ public class CanalClient {
     @Value("${canal.deal.batchsize:}")
     private Integer batchSize;
 
-    @Value("${canal.file.ftppath:}")
+    @Value("${ftp.filepath:}")
     private String ftpPath;
 
 
@@ -115,7 +115,7 @@ public class CanalClient {
     public void saveQueueSqlToFile() throws IOException {
         for(int i = 0;i< SQL_QUEUE.size();i++){
             String sql = SQL_QUEUE.poll();
-            log.info("[sql]---->"+sql);
+            log.info("[sql]---->{}",sql);
             String fileName = DateFormatUtil.getLocalDateTime("yyyy-MM-dd HH-mm-ss-SSS")+SQL_FILE_SUFFIX;
             File file = new File(FileUtil.getFilePath(sqlSendPath,fileName));
             FileOutputStream outputStream = null;
@@ -123,7 +123,7 @@ public class CanalClient {
                 outputStream = new FileOutputStream(file);
                 outputStream.write(sql.getBytes());
             } catch (Exception e) {
-                log.error("sql:'"+sql+"'"+"写入"+file.getName()+"失败");
+                log.error("Sql:'{}' write to {} failure",sql,file.getName());
             } finally {
                 if(outputStream!=null){
                     outputStream.close();
@@ -139,7 +139,7 @@ public class CanalClient {
      * @author: Pillow2023
      * @date: 2023/3/1
      * @Title: dataHandle
-     * @Description : 数据处理
+     * @Description : 数据处理,只针对数据的增删改以及表的增加、修改、删除进行处理
      * @param entrys
      * @return void
      */
@@ -161,8 +161,6 @@ public class CanalClient {
             }
         }
     }
-
-
 
 
     /**
