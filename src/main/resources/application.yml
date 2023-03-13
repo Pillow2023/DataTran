@@ -37,8 +37,14 @@ ftp:
 
 
 send:
-  enable : true
+  enable : false
   synctype: ftp
   filesync:
     path: canal
     ftppath: /opt/canal_sql_file/
+
+receive:
+  enable : true
+  listenpath : /canal/send/
+  intervaltime: 10
+  filtersuffix : .sql

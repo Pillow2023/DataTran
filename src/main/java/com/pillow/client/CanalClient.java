@@ -114,7 +114,7 @@ public class CanalClient {
     }
 
     /**
-     * @author: wujt
+     * @author: Pillow2023
      * @date: 2023/3/10
      * @Title: executeQueueSql
      * @Description : 执行队列中的sql语句

@@ -1,6 +1,9 @@
 package com.pillow.util;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 /**
  * @author Pillow2023
@@ -83,6 +86,35 @@ public class FileUtil {
         }else{
             return dirPath+"/"+fileName;
         }
+    }
+
+    /**
+     * @author: Pillow2023
+     * @date: 2023/3/13
+     * @Title: getFileContent
+     * @Description : 获取文件内容，以String类型返回
+     * @param file
+     * @return java.lang.String
+     */
+    public static String getFileContent(File file){
+        String content = "";
+        try {
+            FileInputStream fis = new FileInputStream(file);
+            byte[] buffer = new byte[10];
+            StringBuilder sb = new StringBuilder();
+            while (fis.read(buffer) != -1) {
+                sb.append(new String(buffer));
+                buffer = new byte[10];
+            }
+            fis.close();
+
+            content = sb.toString();
+        } catch (FileNotFoundException fileNotFoundException) {
+            fileNotFoundException.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return content;
     }
 }
 
