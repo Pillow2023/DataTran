@@ -40,7 +40,7 @@ public class CanalClient {
     @Value("${send.synctype}")
     private String syncType;
 
-    @Value("${filesync.ftppath:}")
+    @Value("${send.filesync.ftppath:}")
     private String ftpPath;
 
     private String sqlSendPath;
@@ -55,7 +55,7 @@ public class CanalClient {
 
 
 
-    @Value("${filesync.path:}")
+    @Value("${send.filesync.path:}")
     public void setFilePath(String path){
         String rootPath = FileUtil.dirpathFormat(path,true);
         sqlSendPath = FileUtil.dirPathSplice(rootPath,"send");

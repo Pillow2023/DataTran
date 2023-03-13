@@ -16,12 +16,6 @@ spring:
     username: root
     password: root
 
-datatran:
-  send:
-    enable: true
-  receive:
-    enable: true
-
 canal:
   instance :
     host: 192.168.254.132
@@ -43,8 +37,8 @@ ftp:
 
 
 send:
-  synctype: sql
-
-filesync:
-  path: canal
-  ftppath: /opt/canal_sql_file/
+  enable : true
+  synctype: ftp
+  filesync:
+    path: canal
+    ftppath: /opt/canal_sql_file/

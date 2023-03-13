@@ -19,7 +19,7 @@ public class CanalApplication implements CommandLineRunner {
     @Autowired
     private CanalClient canalClient;
 
-    @Value("${datatran.send.enable:}")
+    @Value("${send.enable:}")
     private Boolean sendEnable;
 
     public static void main(String[] args){
