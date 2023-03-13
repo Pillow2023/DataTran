@@ -80,7 +80,7 @@ public class FtpUtil {
         }
 
         if(ftpClient==null){
-            throw new RuntimeException("无法从连接池中获取到ftp客户端",ex);
+            throw new RuntimeException("Cannot obtained ftp client from the connection pool",ex);
         }
         return ftpClient;
     }

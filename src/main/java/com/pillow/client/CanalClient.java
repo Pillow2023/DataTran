@@ -5,6 +5,7 @@ import com.alibaba.otter.canal.client.CanalConnectors;
 import com.alibaba.otter.canal.protocol.CanalEntry.*;
 import com.alibaba.otter.canal.protocol.Message;
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.pillow.util.DBUtil;
 import com.pillow.util.DateFormatUtil;
 import com.pillow.util.FileUtil;
 import com.pillow.util.FtpUtil;
@@ -36,25 +37,28 @@ public class CanalClient {
     @Value("${canal.deal.batchsize:}")
     private Integer batchSize;
 
-    @Value("${ftp.filepath:}")
+    @Value("${send.synctype}")
+    private String syncType;
+
+    @Value("${filesync.ftppath:}")
     private String ftpPath;
 
+    private String sqlSendPath;
 
-    private static String sqlSendPath;
+    private String sqlCompletePath;
+
+    private final static String SQL_FILE_SUFFIX = ".sql";
+
+    private final static String SYNC_TYPE_FTP = "ftp";
+
+    private final static String SYNC_TYPE_SQL = "sql";
 
 
-    private static String sqlReplyPath;
 
-
-    private static String sqlCompletePath;
-
-    private static String SQL_FILE_SUFFIX = ".sql";
-
-    @Value("${canal.file.path:}")
+    @Value("${filesync.path:}")
     public void setFilePath(String path){
         String rootPath = FileUtil.dirpathFormat(path,true);
         sqlSendPath = FileUtil.dirPathSplice(rootPath,"send");
-        sqlReplyPath = FileUtil.dirPathSplice(rootPath,"reply");
         sqlCompletePath = FileUtil.dirPathSplice(rootPath,"complete");
     }
 
@@ -89,7 +93,12 @@ public class CanalClient {
 
                     //当队列里面堆积的sql大于一定数值的时候就模拟执行
                     if (SQL_QUEUE.size() >= 1) {
-                        saveQueueSqlToFile();
+                        if(SYNC_TYPE_FTP.equals(syncType)){
+                            syncSqlFileToFtp();
+                        }
+                        if(SYNC_TYPE_SQL.equals(syncType)){
+                            executeQueueSql();
+                        }
                     }
                 }
             } catch (InterruptedException e) {
@@ -105,14 +114,29 @@ public class CanalClient {
     }
 
     /**
-     * @author: Pillow2023
-     * @date: 2023/3/1
-     * @Title: saveQueueSqlToFile
-     * @Description : 将队列中的sql语句逐条导出为sql文件
+     * @author: wujt
+     * @date: 2023/3/10
+     * @Title: executeQueueSql
+     * @Description : 执行队列中的sql语句
      * @param
      * @return void
      */
-    public void saveQueueSqlToFile() throws IOException {
+    public void executeQueueSql() {
+        for(int i= 0;i< SQL_QUEUE.size();i++){
+            String sql = SQL_QUEUE.poll();
+            DBUtil.executeSql(sql);
+        }
+    }
+
+    /**
+     * @author: Pillow2023
+     * @date: 2023/3/1
+     * @Title: syncSqlFile
+     * @Description : 同步sql文件，将队列中的sql语句生成sql文件发送至ftp服务器
+     * @param
+     * @return void
+     */
+    public void syncSqlFileToFtp() throws IOException {
         for(int i = 0;i< SQL_QUEUE.size();i++){
             String sql = SQL_QUEUE.poll();
             log.info("[sql]---->{}",sql);
@@ -174,7 +198,12 @@ public class CanalClient {
     private void saveDDLSql(Entry entry){
         try {
             RowChange rowChange = RowChange.parseFrom(entry.getStoreValue());
+            EventType eventType = rowChange.getEventType();
             String sql = rowChange.getSql();
+            if(EventType.ERASE.equals(eventType)){
+                int index = sql.indexOf("/*");
+                sql =sql.substring(0,index-1);
+            }
             SQL_QUEUE.add(sql);
         } catch (InvalidProtocolBufferException e) {
             e.printStackTrace();
