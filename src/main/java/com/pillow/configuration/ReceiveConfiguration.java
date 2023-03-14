@@ -32,13 +32,13 @@ public class ReceiveConfiguration {
 
     private void initFileMonitor(ReceiveConfigProperties properties) {
         //监控目录
-        String listenPath = properties.listenPath;
+        String monitorPath = properties.monitorPath;
         //轮询间隔
         Integer intervalTime = properties.intervalTime;
         // 设置文件过滤,只要sql文件
         IOFileFilter filter = FileFilterUtils.or(FileFilterUtils.suffixFileFilter(properties.filterSuffix));
         /// 创建一个文件观察器用于处理文件的格式
-        FileAlterationObserver observer = new FileAlterationObserver(listenPath,filter);
+        FileAlterationObserver observer = new FileAlterationObserver(monitorPath,filter);
         //添加监听者
         observer.addListener(new FileListener());
         //创建文件变化监听器
@@ -55,7 +55,7 @@ public class ReceiveConfiguration {
     @ConfigurationProperties(prefix = "receive")
     static class ReceiveConfigProperties{
         Boolean enable;
-        String listenPath;
+        String monitorPath;
         Integer intervalTime;
         String filterSuffix;
     }

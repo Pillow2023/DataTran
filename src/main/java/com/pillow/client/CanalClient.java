@@ -43,9 +43,8 @@ public class CanalClient {
     @Value("${send.filesync.ftppath:}")
     private String ftpPath;
 
-    private String sqlSendPath;
+    private String path;
 
-    private String sqlCompletePath;
 
     private final static String SQL_FILE_SUFFIX = ".sql";
 
@@ -57,9 +56,7 @@ public class CanalClient {
 
     @Value("${send.filesync.path:}")
     public void setFilePath(String path){
-        String rootPath = FileUtil.dirpathFormat(path,true);
-        sqlSendPath = FileUtil.dirPathSplice(rootPath,"send");
-        sqlCompletePath = FileUtil.dirPathSplice(rootPath,"complete");
+        this.path = FileUtil.dirpathFormat(path,true);
     }
 
 
@@ -141,7 +138,7 @@ public class CanalClient {
             String sql = SQL_QUEUE.poll();
             log.info("[sql]---->{}",sql);
             String fileName = DateFormatUtil.getLocalDateTime("yyyy-MM-dd HH-mm-ss-SSS")+SQL_FILE_SUFFIX;
-            File file = new File(FileUtil.getFilePath(sqlSendPath,fileName));
+            File file = new File(FileUtil.getFilePath(path,fileName));
             FileOutputStream outputStream = null;
             try {
                 outputStream = new FileOutputStream(file);
