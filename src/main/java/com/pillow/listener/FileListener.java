@@ -20,7 +20,7 @@ public class FileListener extends FileAlterationListenerAdaptor {
     public void onFileCreate(File file) {
         String sql = FileUtil.getFileContent(file);
         log.info("Create file:{}",file.getAbsoluteFile());
-        DBUtil.executeSql(sql);
+//        DBUtil.executeSql(sql);
 
     }
 

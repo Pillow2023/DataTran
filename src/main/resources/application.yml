@@ -48,3 +48,8 @@ receive:
   monitorpath : /canal/
   intervaltime: 10
   filtersuffix : .sql
+
+es:
+  host: 192.168.254.132
+  port: 9200
+  indices: datatran
